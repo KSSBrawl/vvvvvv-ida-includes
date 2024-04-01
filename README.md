@@ -2,6 +2,10 @@
 
 This is a collection of pseudo-C headers for use with IDA in order to ease updating VVVVVV's autosplitter.
 
+## Maintaining
+
+As of the last time this README has been updated, these headers support VVVVVV 2.4.1 specifically. If you are coming here and the current version of VVVVVV is not 2.4.1, you will need to update the class definitions in the `include/vvvvvv` folder to reflect changes made to them since then.
+
 ## How to use
 
 After loading VVVVVV's executable into IDA, navigate to `File->Load file->Parse C header file...` in the menu and load `include/windows.h` if you are working on the Windows autosplitter file for LiveSplit, or `include/linux.h` if you are updating the Linux autosplitter for use with [pyautosplit](https://github.com/christofsteel/pyautosplit).
