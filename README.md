@@ -115,4 +115,4 @@ Because of how similar the assembly looks to the original source code we can saf
 
 #### Fixing the addresses
 
-The addresses listed in IDA do not actually match up with the addresses LiveSplit's autosplitter is going to need. You can print out the value of `modules.First().BaseAddress` inside the autosplitter and read the output with [DebugView](https://learn.microsoft.com/en-us/sysinternals/downloads/debugview) to find the exact offset you must subtract from IDA's addresses in order to make them correct for LiveSplit.
+The addresses listed in IDA do not actually match up with the addresses LiveSplit's autosplitter is going to need. To fix this, you'll need to subtract the program's base address from each address. In IDA, you can find this by scrolling up to the top of the disassembly, taking the first address in the listing, subtracting 0x1000 from it, and then subtracting the resulting number from every address you're putting into LiveSplit.
