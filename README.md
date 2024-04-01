@@ -97,7 +97,7 @@ Once again, `main.cpp` defines an instance of this class and calls it `map`. We 
 
 Unfortunately for us, these two variables are not neatly bundled up inside of classes but instead are global scope. You're gonna have to get your hands a bit dirty. Start by performing a text search for `13h` and pick the search result that looks something like `mov dword_[gibberish hex digits], 13h`. This will hopefully bring you to something that looks like this:
 
-![A screenshot of the disassembler program IDA](images/gotomode_fadetomode.png)
+![A screenshot of the disassembler program IDA](media/gotomode_fadetomode.png)
 
 If it did bring you to something like this, great! This is the `startmode()` function in `Input.cpp` and by cross-referencing with the source code we can glean the info we need:
 
