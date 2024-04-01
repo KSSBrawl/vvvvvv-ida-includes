@@ -115,4 +115,4 @@ Because of how similar the assembly looks to the original source code we can saf
 
 #### Fixing the addresses
 
-The addresses listed in IDA do not actually match up with the addresses LiveSplit's autosplitter is going to need. You can print out the value of `modules.First().ModuleMemorySize` inside the autosplitter and read the output with [DebugView](https://learn.microsoft.com/en-us/sysinternals/downloads/debugview) to find the exact offset you must subtract from IDA's addresses in order to make them correct for LiveSplit... you'll need this value to update the part of the autosplitter that determines what version you are playing anyway.
+The addresses listed in IDA do not actually match up with the addresses LiveSplit's autosplitter is going to need. You can print out the value of `modules.First().BaseAddress` inside the autosplitter and read the output with [DebugView](https://learn.microsoft.com/en-us/sysinternals/downloads/debugview) to find the exact offset you must subtract from IDA's addresses in order to make them correct for LiveSplit.
