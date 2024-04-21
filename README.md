@@ -31,6 +31,7 @@ The Windows and Linux autosplitters use different names to identify internal VVV
 | `firstTextLineLarge`          | `script.txt._Myfirst->_Bx._Ptr` |
 | `teleport_to_x`               | `game.teleport_to_x`            |
 | `teleport_to_y`               | `game.teleport_to_y`            |
+| `collect`                     | `obj.collect`                   |
 | `menustate`                   | `game.gamestate`                |
 | `ingame_titlemode`            | `game.ingame_titlemode`         |
 
@@ -44,27 +45,13 @@ If you know what you're doing, it's pretty simple. If you *don't* know what you'
 
 ### Windows
 
-The Windows VVVVVV executable is compiled with very minimal debug symbols so simply trying to search for things by name will be a fruitless endeavor. Thankfully, there's only a few key things you need to look for and the steps for finding them are mostly very similar.
+The Windows VVVVVV executable is compiled with very minimal debug symbols, but thankfully recent versions have added a command line option called `-addresses` that will list the memory addresses of all the game's main class instances. Most of the variables we care about are stored in these instances (we particuarly care about the `game`, `script`, `map`, and `obj` objects) but there are two that unfortunately are not stored in classes which makes things harder.
 
-#### The `Game` class instance
+#### `game`, `script`, `map`, and `obj`
 
- Defined in `main.cpp` of the source code is an instance of the `Game` class called... `game`. It contains nearly everything relevant to the autosplitter's operation so this should be the first thing you track down. The steps I use to find this class instance are:
+99% of what we care about is stored in these objects whose addresses the aforementioned `-addresses` command line option will give you right away. These are instances of the `Game`, `scriptclass`, `mapclass`, and `entityclass` classes respectively so go ahead and import the definitions from the files you loaded through the `Local types` view. After that, you can navigate to each instance by hitting the G key in the IDA View to pull up the `Jump to address` dialog, and type in the address of the instance you want. Once you have navigated to it, hit Alt+Q to pull up the `Choose a structure type` dialog and pick the correct one for the instance. With that, now you'll be able to expand the newly defined structure in IDA View and see the address of every one of its data members.
 
-1. Perform a text search for `0BF4h`. This is 3060 decimal in IDA's hexadecimal notation, and corresponds to one of the game state IDs for rescuing Vermilion. This will hopefully pull up only one result that, although the symbol for it has been stripped, is inside the `Game::updatestate()` method.
-2. In the IDA text view, go to the start of this method, right click on its name and select `List cross references to...` and pick any of them. It really doesn't matter which you pick because what we care about is an instruction that will immediately precede the instruction the cross ref takes you to, which will be a `mov ecx, unk_[gibberish hex digits]`instruction loading the `this` reference to the class into the ECX register. Double click on the operand and rename the address it takes you to `game`. You've now found the `Game` class instance, yay!
-3. From the toolbar, navigate to `Open subviews->Local types` and find the listing for the `Game` structure. Double click it to pull up the import dialog and confirm the import.
-4. Going back to the text view, select the address you renamed to `game` and hit Alt+Q to pull up the structure variable definition window. Set this address to the `Game` type.
-
-After all this, you now have both found the `Game` class and have easy visibility of the addresses of the relevant variables it contains.
-
-#### The `scriptclass` class instance
-
-Also defined in `main.cpp` is an instance of the `scriptclass` class named `script`. We only really care about this class because it gives us a convenient method for splitting on the "Hello!" textbox in the credits sequence so let's get to work.
-
-1. Perform a text search for `textboxtimer` and pick the search result that looks something like `push offset aTextboxtimer ; "textboxtimer"`. This will put you inside of the `scriptclass::run()` method which, again, does not actually have a symbol marking it as such in the Windows executable.
-2. In the IDA text view, go to the start of this method, right click on its name and select `List cross references to...` and pick any of them. Once again, it doesn't matter which because we just care about an instruction that's immediately before the code referencing this method, namely another `mov ecx, unk_[gibberish hex digits]`instruction which loads the `this` reference to the class. Double click on the operand and rename the address it takes you to `script`.
-3. From the toolbar, navigate to `Open subviews->Local types` and find the listing for the `scriptclass` structure. Double click it to pull up the import dialog and confirm the import.
-4. Going back to the text view, select the address you renamed to `script` and press Alt+Q to pull up the structure variable definition window. Set this address to the `scriptclass` type.
+#### A note about `script`
 
 What we specifically care about with this class is the `txt` variable, which is an `std::vector<std::string>` and more specifically we care about the `_Myfirst` variable contained within the `std::vector` class which is a pointer to the first element of the vector. The Visual Studio 2010 implementation of the `_String_val` class that `std::basic_string` (which `std::string` is an alias of) inherits from looks something like this:
 
@@ -87,15 +74,6 @@ public:
 ```
 
 This `_Bx` union contains both an array to store short strings (`_Buf`) and a pointer for allocating space for strings that cannot fit in the array (`_Ptr`), which is why there are both `firstTextLineSmall` and `firstTextLineLarge` pointer variables in the autosplitter and why they have different levels of indirection.
-
-#### The `mapclass` class instance
-
-Once again, `main.cpp` defines an instance of this class and calls it `map`. We only care about one variable in this class that lets us split on the halfway terminal in Final Level.
-
-1. Perform a text search for `"Television Newsvel"` and pick the search result that looks something like `push offset off_[gibberish hex digits] ; "Television Newsvel"`. This will bring you inside `mapclass::initmapdata()` which as you may have guessed does not have a debug symbol inside the executable just like the other methods you've found.
-2. In the IDA text view, go to the start of this method, right click on its name and select `List cross references to...` and go through them one by one until you find one that has a `mov ecx, offset byte_[gibberish hex digits` instruction right before the function call. Right click on the operand of this instruction and rename the address to `map`.
-3. From the toolbar, navigate to `Open subviews->Local types` and find the listing for the `mapclass` structure. Double click it to pull up the import dialog and confirm the import.
-4. Going back to the text view, select the address you renamed to `map` and press Alt+Q to pull up the structure variable definition window. Set this address to the `mapclass` type.
 
 #### `gotomode` and `fadetomode`
 
