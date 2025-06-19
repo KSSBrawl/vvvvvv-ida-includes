@@ -88,6 +88,7 @@ textboxclass
 
   unsigned int print_flags;
   TextboxTranslate translate;
+  bool fill_buttons;
 
   std::vector sprites;
   TextboxImage image;
