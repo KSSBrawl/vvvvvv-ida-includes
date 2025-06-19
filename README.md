@@ -4,7 +4,7 @@ This is a collection of pseudo-C headers for use with IDA in order to ease updat
 
 ## Maintaining
 
-As of the last time this README has been updated, these headers support VVVVVV 2.4.1 specifically. If you are coming here and the current version of VVVVVV is not 2.4.1, you will need to update the class definitions in the `include/vvvvvv` folder to reflect changes made to them since then.
+As of the last time this README has been updated, these headers support VVVVVV 2.4.3 specifically. If you are coming here and the current version of VVVVVV is not 2.4.3, you will need to update the class definitions in the `include/vvvvvv` folder to reflect changes made to them since then.
 
 ## How to use
 
