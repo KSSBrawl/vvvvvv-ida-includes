@@ -4,7 +4,7 @@ This is a collection of pseudo-C headers for use with IDA in order to ease updat
 
 ## Maintaining
 
-As of the last time this README has been updated, these headers support VVVVVV 2.4.3 specifically. If you are coming here and the current version of VVVVVV is not 2.4.3, you will need to update the class definitions in the `include/vvvvvv` folder to reflect changes made to them since then.
+As of the last time this README has been updated, these headers support VVVVVV 2.4.4 specifically. If you are coming here and the current version of VVVVVV is not 2.4.4, you will need to update the class definitions in the `include/vvvvvv` folder to reflect changes made to them since then.
 
 ## How to use
 
@@ -32,6 +32,9 @@ The Windows and Linux autosplitters use different names to identify internal VVV
 | `teleport_to_x`               | `game.teleport_to_x`            |
 | `teleport_to_y`               | `game.teleport_to_y`            |
 | `collect`                     | `obj.collect`                   |
+| `deathcount`                  | `game.deathcount`               |
+| `timeTrialShinyTarget`        | `game.timetrialshinytarget`     |
+| `timeTrialPar`                | `game.timetrialpar`             |
 | `menustate`                   | `game.gamestate`                |
 | `ingame_titlemode`            | `game.ingame_titlemode`         |
 
